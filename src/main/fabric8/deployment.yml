@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: ${project.artifactId}
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+        - name: ${project.artifactId}
+          env:
+          - name: POSTGRES_SERVICE
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres.service.name
+          - name: POSTGRES_DB_NAME
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres.db.name
+          - name: POSTGRES_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: db-security
+                key: db.user.name
+          - name: POSTGRES_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: db-security
+                key: db.user.password
